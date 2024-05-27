@@ -3,6 +3,8 @@ require 'csv'
 require 'json'
 require 'date'
 
+set :bind, '0.0.0.0'
+
 def price_adjustment_factor
   # Assuming peak time is at 14:00 hours
   peak_time = 14
@@ -10,7 +12,9 @@ def price_adjustment_factor
   # Calculate distance from peak time
   time_difference = (current_time - peak_time).abs
   # Simulating a bell curve: closer to peak time, higher the price
-  1 - 0.06 * time_difference
+  # Sometimes the price should be insanely high
+  return 1 + rand(0.0..1.0) if rand(1..20) == 5
+  return 1 - 0.06 * time_difference
 end
 
 # Load inventory data
@@ -57,8 +61,11 @@ get '/prices' do
   content_type :json
 
   # Test of skill.
-  sleep rand(0.1..0.5)
+  sleep rand(0.0..1.0)
+  sleep rand(0.0..10.0) if rand(1..10) == 5
+  sleep 61 if rand(1..100) == 5
   halt 500, { error: 'Internal Server Error' }.to_json if rand(1..10) == 5
+  halt 422, { error: 'Unprocessable Content' }.to_json if rand(1..10) == 5
 
   adjusted_prices.to_json
 end
