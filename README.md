@@ -18,3 +18,4 @@ docker run -p 4567:4567 --rm -t docker.io/library/sinatra-pricing-api:latest
 * 1 in 100 calls have an additional latency of 61s.
 * 1 in 10 calls will return a 500 error.
 * 1 in 20 calls will return a 422 error.
+* _You can experience multiple issues in a single call._
